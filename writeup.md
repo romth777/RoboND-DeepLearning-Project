@@ -5,9 +5,9 @@ Clone the project repo [here](https://github.com/udacity/RoboND-DeepLearning-Pro
 Fill out the TODO's in the project code in the code/model_training.ipynb file.
 Optimize your network and hyper-parameters.
 Train your network and achieve an accuracy of 40% (0.4) using the Intersection over Union IoU metric.
-Make a brief writeup report summarizing why you made the choices you did in building the network.
+Make a brief write-up report summarizing why you made the choices you did in building the network.
 ## Project Specification
-Rubric points for this project are explained [here](https://review.udacity.com/#!/rubrics/1155/view).
+[here](https://review.udacity.com/#!/rubrics/1155/view) are Rubric points for this project.
 
 ## writeup
 ### Model architecture
@@ -35,10 +35,20 @@ In this project I used the following model. This is called the encoder decoder m
  21. BatchNorm:**IN** 160x160x32, **OUT** 160x160x32
  22. Conv2D:**IN** 160x160x32, **OUT** 160x160x3
 
-Just to be afraid, a convolution network called CNN is used for each layer. This is a configuration often used in the area of ​​image processing. In addition, the batch normalization layer normalizes the variation of data in the batch, and learning can be advanced quickly. This is said that because the bias of data input for each layer decreases, the input data will be within a certain range, so convergence of learning becomes faster accordingly. Separable (Depthwise) The convolution layer is usually to calculate both the channel and the spatial position by brute force, calculate the output which was separately calculated, and shorten the calculation time by combining later It is aimed at. It is said to be a contrivance in calculation, it is said that the calculation result does not change with the convolution layer.
+### Techniques and explain
+#### About CNN and FCN
+We use the convolution layers in each. Convolutional Layers often used in the area of ​​image processing.  The concept of Convolutional layers is it squash the image size with filters and expand the features to the depth channel. Connecting the Convolutional layers in every and add Softmax in the tail, it is the Convolutional Neural Network(=CNN). It is good for recognize 'Is this a hot dog?', However, it can not do 'Where is a hot dog?'. This matter based on that the CNN does not have spacial information in it.
+To improve this matter, we can use the additional two techniques. By combining them, it is called the Fully Connected Convolution Networks(=FCN). The FCN can reserve the spacial information in it. The first technique is the 1-by-1 convolutional layer. FCN have the 1-by-1 convolutional layer in the bottom. The output of the previous layer of the 1-by-1 convolutional layer is the same size as kernels of the last layer; so, the spacial information is on the list of the (1, n)
+ size output (n=kernel_number). So the next layer of the 1-by-1 convolutional layer can take the spacial information from the output of the 1-by-1 convolutional layer.
+The second technique is the skip connection. The skip connection is to input the original output to the decoder layer from encoder layer in the same level. The initial production has more clear information about the image, so merge it to the input, the result can be bright.
+
+#### About Generals techniques
+Here is the especially technique of FCN's. Also, we use the essential technology of learning with DNN.
+The batch normalization layer normalizes the variation of data in the batch, and learning can be advanced quickly. The skew of the data in each batch will occur the learning loss in each batch and make it slow in the total learning because the model needs to adjust to each skew. So, it is good for the learning that the skew of the data in each batch reduced, and we should use batch normalization to decrease this issue.
+Separable (Depthwise) The convolution layer calculates the channel and the spatial position separately, and combination it to reduce the computational time.
 
 ### Training
-In the training phase, the most important thing is adjustment of hyper parameters. Originally if you use [hyperopt](https://github.com/hyperopt/hyperopt), [GridSearchCV](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html), etc. for parameter adjustment, you can decide the value exhaustively and objectively, but this time it was not done because of calculation time. First, learning_rate, but tried 0.005, 0.0015, 0.001. Since it diverges when increasing the value, there is an aim to surely converge with a small value. I finally learned well with 0.005, so I used it. Next is epoch number, which is determined by how much learning converges. Since we converged at about 20 this time, we used that value. If it does not converge it will only stretch. For other parameters, we decided based on private GPU.
+In the training phase, the most important thing is the adjustment of hyperparameters. Originally if you use [hyperopt](https://github.com/hyperopt/hyperopt), [GridSearchCV](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html), etc. for parameter adjustment, you can decide the value exhaustively and objectively, but this time it was not done because of calculation time. First, learning_rate, but tried 0.005, 0.0015, 0.001. Since it diverges when increasing the value, there is an aim to converge with a small value surely. I finally learned well with 0.005, so I used it. Next is epoch number, which is determined by how much learning converges. Since we converged at about 20 this time, we used that value. If it does not converge, it will only stretch. For other parameters, we decided based on my GPU environment.
 
 ### Result
 The dataset of this project is downloaded from [Here](https://classroom.udacity.com/nanodegrees/nd209/parts/09664d24-bdec-4e64-897a-d0f55e177f09/modules/cac27683-d5f4-40b4-82ce-d708de8f5373/lessons/197a058e-44f6-47df-8229-0ce633e0a2d0/concepts/06dde5a5-a7a2-4636-940d-e844b36ddd27)
@@ -55,9 +65,13 @@ The dataset of this project is downloaded from [Here](https://classroom.udacity.
  * patrol_non_targ  
  ![image1](./docs/misc/patrol_non_targ.png)
 
-Finally I can got 0.41 score in my trial.
+Finally, I can get 0.41 score on my trial.
 
 ### Future improvement
- * The resolution of the image should be more high, e.g. the size of image, and the quality of image.
+ * The resolution of the image should be more high, e.g., the size of the image, and the quality of the image.
  * It is better to increase the dataset if you want to get more robustness in the other situation.
- * To improve the model, we need to use automatic hyper parameter optimization because the tuning is not quantitative.
+ * To improve the model, we need to use automatic hyperparameter optimization because the tuning is not quantitative.
+ * To apply this model to the other objects we need to change the ground truth data of the target.
+
+### Trained Weights
+[here](https://github.com/romth777/RoboND-DeepLearning-Project/tree/master/data/weights)
