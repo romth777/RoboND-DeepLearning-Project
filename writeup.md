@@ -38,10 +38,15 @@ In this project, I used the following model. This model is called the encoder-de
  22. Conv2D:**IN** 160x160x32, **OUT** 160x160x3
 
 ### Techniques and explain
-#### About CNN and FCN
+#### About CNN
 We use the convolution layers in each. Convolutional Layers often used in the area of ​​image processing.  The concept of Convolutional layers is it squash the image size with filters and expand the features to the depth channel. Connecting the Convolutional layers in every and add Softmax in the tail, it is the Convolutional Neural Network(=CNN). It is good for recognize 'Is this a hot dog?', However, it can not do 'Where is a hot dog?'. This matter based on that the CNN does not have spacial information in it.
-To improve this matter, we can use the additional two techniques. By combining them, it is called the Fully Convolutional Networks(=FCN). The FCN can reserve the spacial information in it. The first technique is the 1-by-1 convolutional layer. FCN have the 1-by-1 convolutional layer in the bottom. The output of the previous layer of the 1-by-1 convolutional layer is the same size as kernels of the last layer; so, the spacial information is on the list of the (1, n)
+To improve this matter, we can use the additional two techniques. By combining them, it is called the Fully Convolutional Networks(=FCN).
+
+#### About FCN
+ The FCN can reserve the spacial information in it. The first technique is the 1-by-1 convolutional layer. FCN have the 1-by-1 convolutional layer in the bottom. The output of the previous layer of the 1-by-1 convolutional layer is the same size as kernels of the last layer; so, the spacial information is on the list of the (1, n)
  size output (n=kernel_number). So the next layer of the 1-by-1 convolutional layer can take the spacial information from the output of the 1-by-1 convolutional layer. And the most important thing about 1-by-1 convolutional layer is that it can reduce the output dimensions to the number of 1-by-1 convolutional filters. To reduce the dimension can be good like more squeeze the features.
+
+#### About Encoder and Decoder
 The mechanism of encoding is that first, the input is an image and input it to the Convolutional layer. The features are consolidated by convolutional filters. Through the all convolutional layers, the output is the essential items, primal elements or unit in the image like that. In this case, it is connected 1-by-1 convolutional layer, and the output of 1-by-1 convolutional layer connect to the decoder block.
 The most important concept of decoding is Upsampling. The upsampling is to make the output expand with consolidated features. And finally, after the last decoder layer, there is a convolutional output layer with softmax activation to create the pixel-wise segmentation image.
 
@@ -73,6 +78,26 @@ The dataset of this project is downloaded from [Here](https://classroom.udacity.
  ![image3](./docs/misc/patrol_non_targ.png)
 
 Finally, I can get 0.41 score on my trial.
+
+### Question from reviewer
+`This rubric point needs a little more work.
+Indeed the encoding layer detects features, Why do we name it "encoder".
+Encoding, in general, means compressing with or without loss of information.`
+ * Which case have we got here?  
+ In this case we can use encoder unit to image segmentation.
+ * Do we lose information?  
+Yes, we lose information.
+ * Which information do we lose?  
+The detail of image, e.g. if we use max-pooling, the output is only max value. So, we lose the value is not max.
+ * Which information does the decoder recover  
+ The decoder recover the information which is the strong features of the image in this case. It is because the input data of decoder layer is squeezed by the encoder layers.
+
+`This rubric point is not fully addressed in your write-up. To address it just answer the following questions`
+
+ * Can the network model as we trained it to be used to track another object?  
+ No, because the ground truth data is not same in that situations.
+ * if no, should we change the network? data? both?  
+ Change the Data is most suitable for this case. Because in my trial the network can also detect the non-hero targets, hence the network depth or width to express this game world's object is enough.
 
 ### Future improvement
  * The resolution of the image should be more high, e.g., the size of the image, and the quality of the image.
