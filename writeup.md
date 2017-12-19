@@ -12,7 +12,7 @@ Make a brief write-up report summarizing why you made the choices you did in bui
 ## writeup
 ### Model architecture
 In this project, I used the following model. This model is called the encoder-decoder model, and it is known to be effective in the area of ​​image segmentation. The most famous architecture is [U-Net](https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/), but this time I got the result I wanted without using a complicated architecture.
-![image4](./docs/misc/Network.png)
+![image4](./docs/misc/Network.PNG)
 
  1. InputLayer:**IN** 160x160x3, **OUT** 160x160x3
  2. SeparableConv2D:**IN** 160x160x3, **OUT** 80x80x32
