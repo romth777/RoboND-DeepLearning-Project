@@ -102,6 +102,11 @@ The detail of image, e.g. if we use max-pooling, the output is only max value. S
  * if no, should we change the network? data? both?  
  Change the Data is most suitable for this case. Because in my trial the network can also detect the non-hero targets, hence the network depth or width to express this game world's object is enough.
 
+`Fully convolutional network (FCN) is different from fully connected layer (FCL).
+ Tip : FCL is similar to 1x1 convolution. But there is a slight difference between them.
+ Please explain both and state the difference between them.`
+ FCN consist on the convolutional layers in each layer, on the other side FCL is the layer which has just a node to fully connect. The difference of them is the layer type to get output.
+
 ### Future improvement
  * The resolution of the image should be more high, e.g., the size of the image, and the quality of the image.
  * It is better to increase the dataset if you want to get more robustness in the other situation.
